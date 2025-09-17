@@ -7,7 +7,7 @@ library(lubridate)
 library(ggplot2)
 library(tidyr)
 
-path= "Documents/NETE_PROJETOS/AB03-PROJETOS_TERCEIROS/LEIDIANE/LARISSA/"
+path= "Documents/"
 
 setwd(path)
 
@@ -184,3 +184,4 @@ p_linhas_facet <- ggplot(n_ondas_ano_long, aes(x = year, y = Valor)) +
        x = "Ano", y = "Valor")
 
 ggsave(paste0("FIGS/", local, "_linhas_ondas_ano_facet.png"), plot = p_linhas_facet, width = 16, height = 8, dpi = 300)
+
