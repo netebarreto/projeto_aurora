@@ -1,0 +1,57 @@
+# Pacotes que eu irei usar
+library(readr)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(gridExtra) #Colocar gráficos lado a lado na minha versão R
+
+# Importar planilha
+dados <- read_csv("chuva_1981_2022.csv")
+
+# Preparando as datas da minha planilha
+dados <- dados %>%
+  mutate(Data = dmy(Data),
+         Ano = year(Data),
+         Mes = month(Data, label = TRUE, abbr = TRUE))
+
+# Média mensal
+media_mensal <- dados %>%
+  group_by(Mes) %>%
+  summarise(Media = mean(Total, na.rm = TRUE))
+
+# Gráfico 1: barras média mensal
+g1 <- ggplot(media_mensal, aes(x = Mes, y = Media)) +
+  geom_col(fill = "grey40", width = 0.7) +
+  labs(title = "Média mensal das chuvas (1981–2022)",
+       y = "Precipitação média (mm)",
+       x = "Mês") +
+  theme_classic(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 15),
+    axis.text = element_text(color = "black"),
+    axis.title = element_text(face = "bold")
+  )
+
+# Gráfico 2: boxplot 
+g2 <- ggplot(dados, aes(x = Mes, y = Total)) +
+  geom_boxplot(fill = "grey70", color = "black", width = 0.7) +
+  labs(title = "Distribuição das chuvas mensais (1981–2022)",
+       y = "Precipitação (mm)",
+       x = "Mês") +
+  theme_classic(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 15),
+    axis.text = element_text(color = "black"),
+    axis.title = element_text(face = "bold")
+  )
+
+# Colocar lado a lado
+grid.arrange(g1, g2, ncol = 2)
+
+#Salvando png
+png("chuvas_medias_boxplot.png", 
+    width = 3500, height = 1800, res = 300)
+
+grid.arrange(g1, g2, ncol = 2)
+
+dev.off()
